@@ -1,0 +1,21 @@
+{
+  "name": "pfcombat",
+  "version": "0.0.0",
+  "description": "Combat manager for the PathFinder Roleplaying ame",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "gatesvp",
+  "license": "BSD",
+  "dependencies": {
+    "express": "3.2.3",
+    "jade": "*",
+    "less": "*",
+    "less-middleware": "*",
+    "firebase": "*",
+    "underscore": "*"
+  }
+}

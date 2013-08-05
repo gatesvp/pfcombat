@@ -1,0 +1,62 @@
+extends layout
+
+block content
+
+  form.form-horizontal(id='abilities',method='post')
+    div.control-group
+      if (id === '')
+        label.control-label(for='user_id') Name
+        div.controls
+          input#user_id(type='text',placeholder='Pick a unique name')
+      else
+        label.control-label(for='user_id') Name
+        div.controls
+          input#user_id(type='text',placeholder='Pick a unique name',value='#{id}')
+
+    div.control-group
+      label.control-label(for='str') Strength
+      div.controls
+        input#str(type='text',name='str',placeholder='base',value='#{data.str}')
+
+    div.control-group
+      label.control-label(for='dex') Dexterity
+      div.controls
+        input#dex(type='text',name='dex',placeholder='base',value='#{data.dex}')
+
+    div.control-group
+      label.control-label(for='con') Constitution
+      div.controls
+        input#con(type='text',name='con',placeholder='base',value='#{data.con}')
+
+    div.control-group
+      label.control-label(for='int') Intelligence
+      div.controls
+        input#int(type='text',name='int',placeholder='base',value='#{data.int}')
+
+    div.control-group
+      label.control-label(for='wis') Wisdom
+      div.controls
+        input#wis(type='text',name='wis',placeholder='base',value='#{data.wis}')
+
+    div.control-group
+      label.control-label(for='cha') Charisma
+      div.controls
+        input#cha(type='text',name='cha',placeholder='base',value='#{data.cha}')
+  
+    div.control-group
+      label.control-label
+      div.controls
+        input#save.btn.btn-primary(type='submit',value='Save')
+        input#cancel.btn-link(type='button',value='Cancel')
+
+block script
+  script
+    var spinconfig = {minimum:0, maximum:30, step:1, numberOfDecimals:0};
+  
+    $('#str').spinedit(spinconfig);
+    $('#dex').spinedit(spinconfig);
+    $('#con').spinedit(spinconfig);
+    $('#int').spinedit(spinconfig);
+    $('#wis').spinedit(spinconfig);
+    $('#cha').spinedit(spinconfig);
+    
