@@ -1,1 +1,1 @@
-Combat Manager for Pathfinder RPG
+Combat Manager for Pathfinder RPG.
