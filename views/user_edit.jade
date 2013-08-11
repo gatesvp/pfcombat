@@ -3,11 +3,15 @@ extends layout
 block content
 
   form.form-horizontal(id='abilities',method='post')
+    if (err)
+      div.alert.alert-error
+        err
+  
     div.control-group
       if (id === '')
         label.control-label(for='user_id') Name
         div.controls
-          input#user_id(type='text',placeholder='Pick a unique name')
+          input#user_id(type='text',name='id',placeholder='Pick a unique name')
       else
         label.control-label(for='user_id') Name
         div.controls
@@ -16,37 +20,47 @@ block content
     div.control-group
       label.control-label(for='str') Strength
       div.controls
-        input#str(type='text',name='str',placeholder='base',value='#{data.str}')
+        input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
 
     div.control-group
       label.control-label(for='dex') Dexterity
       div.controls
-        input#dex(type='text',name='dex',placeholder='base',value='#{data.dex}')
+        input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
 
     div.control-group
       label.control-label(for='con') Constitution
       div.controls
-        input#con(type='text',name='con',placeholder='base',value='#{data.con}')
+        input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
 
     div.control-group
       label.control-label(for='int') Intelligence
       div.controls
-        input#int(type='text',name='int',placeholder='base',value='#{data.int}')
+        input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
 
     div.control-group
       label.control-label(for='wis') Wisdom
       div.controls
-        input#wis(type='text',name='wis',placeholder='base',value='#{data.wis}')
+        input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
 
     div.control-group
       label.control-label(for='cha') Charisma
       div.controls
-        input#cha(type='text',name='cha',placeholder='base',value='#{data.cha}')
-  
+        input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
+
+    div.control-group
+      label.control-label(for='alignment') Alignment
+      div.controls
+        select#alignment(name='alignment',placeholder='N')
+          each al in alignments
+            if (data.alignment === al.id)
+              option(value='#{al.id}',selected) #{al.name}
+            else
+              option(value='#{al.id}') #{al.name}
+
     div.control-group
       label.control-label
       div.controls
-        input#save.btn.btn-primary(type='submit',value='Save')
+        input#save.btn-large.btn-primary(type='submit',value='Save')
         input#cancel.btn-link(type='button',value='Cancel')
 
 block script

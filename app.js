@@ -35,8 +35,9 @@ if ('development' == app.get('env')) {
 app.get('/', function(req, res) { return routes.index(req, res, firebaseRoot); });
 app.get('/users', function(req, res) { return user.list(req, res, firebaseRoot); });
 app.get('/user/create', function(req, res) { return user.create(req, res, firebaseRoot); });
-app.get('/user/edit/:id', function(req, res) { return user.edit(req, res, firebaseRoot); })
-app.post('/user/edit/:id', function(req, res) { return user.edit_post(req, res, firebaseRoot); })
+app.get('/user/edit/:id', function(req, res) { return user.edit(req, res, firebaseRoot); });
+app.post('/user/create', function(req, res) { return user.save(req, res, firebaseRoot); });
+app.post('/user/edit/:id', function(req, res) { return user.save(req, res, firebaseRoot); });
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
