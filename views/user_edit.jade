@@ -5,7 +5,7 @@ block content
   form.form-horizontal(id='abilities',method='post')
     if (err)
       div.alert.alert-error
-        err
+        =err
   
     div.control-group
       if (id === '')
@@ -21,31 +21,37 @@ block content
       label.control-label(for='str') Strength
       div.controls
         input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
+        span#str-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='dex') Dexterity
       div.controls
         input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
+        span#dex-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='con') Constitution
       div.controls
         input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
+        span#con-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='int') Intelligence
       div.controls
         input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
+        span#int-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='wis') Wisdom
       div.controls
         input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
+        span#wis-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='cha') Charisma
       div.controls
         input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
+        span#cha-mod.help-inline.badge
 
     div.control-group
       label.control-label(for='alignment') Alignment
@@ -67,10 +73,36 @@ block script
   script
     var spinconfig = {minimum:0, maximum:30, step:1, numberOfDecimals:0};
   
-    $('#str').spinedit(spinconfig);
-    $('#dex').spinedit(spinconfig);
-    $('#con').spinedit(spinconfig);
-    $('#int').spinedit(spinconfig);
-    $('#wis').spinedit(spinconfig);
-    $('#cha').spinedit(spinconfig);
+    var modifiers = function(score){
+      if (score >= 10){ return Math.floor((score-10)/2); }
+      else { return Math.ceil((score-10)/2); }
+    }
+  
+    var modifier_display = function(span_id, value) {
+      var modifier = modifiers(value);
+      $(span_id).text(modifier)
+        .removeClass('label-success')
+        .removeClass('label-important');
+    
+      if (modifier > 0) { $(span_id).addClass('label-success'); }
+      else if (modifier < 0) { $(span_id).addClass('label-important'); }    
+    }
+    
+    $(function() {
+      // initialize the "modifiers"
+      modifier_display('#str-mod', $('#str').val());
+      modifier_display('#dex-mod', $('#dex').val());
+      modifier_display('#con-mod', $('#con').val());
+      modifier_display('#int-mod', $('#int').val());
+      modifier_display('#wis-mod', $('#wis').val());
+      modifier_display('#cha-mod', $('#cha').val());
+
+      // initialize spinEdit
+      $('#str').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#str-mod', e.value); } );
+      $('#dex').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#dex-mod', e.value); } );
+      $('#con').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#con-mod', e.value); } );
+      $('#int').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#int-mod', e.value); } );
+      $('#wis').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#wis-mod', e.value); } );
+      $('#cha').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#cha-mod', e.value); } );
+    });
     

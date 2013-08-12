@@ -3,8 +3,9 @@
  * GET users listing.
  */
 
-var skills = require('../db/skills');
+var skills = require('../db/skills').skills;
 var alignments = require('../db/alignments').alignments;
+var ability_modifier = require('../db/stats').modifers;
 var _ = require('underscore');
 
 exports.list = function(req, res, firebase){
