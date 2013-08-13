@@ -86,6 +86,11 @@ var update_user_values = function(user, values){
   if(values.cha) { user.stats.cha = values.cha; }
 
   if(values.alignment) { user.alignment = values.alignment; }
+  if(values.bab) { user.bab = values.bab; }
+  if(values.ref) { user.ref = values.ref; }
+  if(values.fort) { user.fort = values.fort; }
+  if(values.will) { user.will = values.will; }
+  
 }
 
 

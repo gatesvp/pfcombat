@@ -18,42 +18,6 @@ block content
           input#user_id(type='text',placeholder='Pick a unique name',value='#{id}')
 
     div.control-group
-      label.control-label(for='str') Strength
-      div.controls
-        input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
-        span#str-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='dex') Dexterity
-      div.controls
-        input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
-        span#dex-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='con') Constitution
-      div.controls
-        input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
-        span#con-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='int') Intelligence
-      div.controls
-        input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
-        span#int-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='wis') Wisdom
-      div.controls
-        input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
-        span#wis-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='cha') Charisma
-      div.controls
-        input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
-        span#cha-mod.help-inline.badge
-
-    div.control-group
       label.control-label(for='alignment') Alignment
       div.controls
         select#alignment(name='alignment',placeholder='N')
@@ -62,6 +26,77 @@ block content
               option(value='#{al.id}',selected) #{al.name}
             else
               option(value='#{al.id}') #{al.name}
+
+    div.control-group
+      label.control-label(for='str') Strength
+      div.controls
+        input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
+        span.str-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='dex') Dexterity
+      div.controls
+        input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
+        span.dex-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='con') Constitution
+      div.controls
+        input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
+        span.con-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='int') Intelligence
+      div.controls
+        input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
+        span.int-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='wis') Wisdom
+      div.controls
+        input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
+        span.wis-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='cha') Charisma
+      div.controls
+        input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
+        span.cha-mod.help-inline.badge
+
+    div.control-group
+      label.control-label(for='bab') Base Attack Bonus
+      div.controls
+        input#bab(type='text',name='bab',placeholder='base',value='#{data.bab}')
+        span.help-inline Melee:
+          span#bab-melee.badge.badge-inverse
+        span.help-inline Ranged:
+          span#bab-ranged.badge.badge-inverse
+          
+
+    div.control-group
+      label.control-label(for='ref') Reflex
+      div.controls
+        input#ref(type='text',name='ref',placeholder='base',value='#{data.ref}')
+        span.help-inline Dex:
+          span.dex-mod.badge
+        span.help-inline Total:
+          span#ref-total.badge.badge-inverse
+    div.control-group
+      label.control-label(for='fort') Fort
+      div.controls
+        input#fort(type='text',name='fort',placeholder='base',value='#{data.fort}')
+        span.help-inline Con:
+          span.con-mod.badge
+        span.help-inline Total:
+          span#fort-total.badge.badge-inverse
+    div.control-group
+      label.control-label(for='will') Will
+      div.controls
+        input#will(type='text',name='will',placeholder='base',value='#{data.will}')
+        span.help-inline Will:
+          span.wis-mod.badge
+        span.help-inline Total:
+          span#will-total.badge.badge-inverse
 
     div.control-group
       label.control-label
@@ -78,8 +113,14 @@ block script
       else { return Math.ceil((score-10)/2); }
     }
   
+    var get_stat_bonus = function(attr) {
+      return modifiers(parseInt($('#'+attr).val()));
+    }
+  
     var modifier_display = function(span_id, value) {
       var modifier = modifiers(value);
+      if (modifier > 0) { modifier = '+' + modifier; }
+      
       $(span_id).text(modifier)
         .removeClass('label-success')
         .removeClass('label-important');
@@ -88,21 +129,74 @@ block script
       else if (modifier < 0) { $(span_id).addClass('label-important'); }    
     }
     
+    var str_changed = function(value){    
+      modifier_display('.str-mod', value);
+      bab_changed();
+    }
+    var dex_changed = function(value){
+      modifier_display('.dex-mod', value);
+      bab_changed();
+      ref_changed();
+    }
+    var con_changed = function(value){
+      modifier_display('.con-mod', value);
+      fort_changed();
+    }
+    var int_changed = function(value){
+      modifier_display('.int-mod', value);
+    }
+    var wis_changed = function(value){
+      modifier_display('.wis-mod', value);
+      will_changed();
+    }
+    var cha_changed = function(value){
+      modifier_display('.cha-mod', value);
+    }
+    var bab_changed = function(value){
+      if(!value) { value = parseInt($('#bab').val()); }
+    
+      var str_bonus = get_stat_bonus('str');
+      var dex_bonus = get_stat_bonus('dex');
+    
+      $('#bab-melee').text(value + str_bonus);
+      $('#bab-ranged').text(value + dex_bonus);
+    }
+    
+    var ref_changed = function(value){
+      if(!value) { value = parseInt($('#ref').val()); }
+      var dex_bonus = get_stat_bonus('dex');
+       $('#ref-total').text(value+dex_bonus);
+    }
+    var fort_changed = function(value){
+      if(!value) { value = parseInt($('#fort').val()); }
+      var con_bonus = get_stat_bonus('con');
+       $('#fort-total').text(value+con_bonus);
+    }
+    var will_changed = function(value){
+      if(!value) { value = parseInt($('#will').val()); }
+      var wis_bonus = get_stat_bonus('wis');
+       $('#will-total').text(value+wis_bonus);
+    }
+
     $(function() {
-      // initialize the "modifiers"
-      modifier_display('#str-mod', $('#str').val());
-      modifier_display('#dex-mod', $('#dex').val());
-      modifier_display('#con-mod', $('#con').val());
-      modifier_display('#int-mod', $('#int').val());
-      modifier_display('#wis-mod', $('#wis').val());
-      modifier_display('#cha-mod', $('#cha').val());
+      // initialize the various stats
+      str_changed($('#str').val());
+      dex_changed($('#dex').val());
+      con_changed($('#con').val());
+      int_changed($('#int').val());
+      wis_changed($('#wis').val());
+      cha_changed($('#cha').val());
 
       // initialize spinEdit
-      $('#str').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#str-mod', e.value); } );
-      $('#dex').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#dex-mod', e.value); } );
-      $('#con').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#con-mod', e.value); } );
-      $('#int').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#int-mod', e.value); } );
-      $('#wis').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#wis-mod', e.value); } );
-      $('#cha').spinedit(spinconfig).on("valueChanged", function(e) { modifier_display('#cha-mod', e.value); } );
+      $('#str').spinedit(spinconfig).on("valueChanged", function(e) { str_changed(e.value); } );
+      $('#dex').spinedit(spinconfig).on("valueChanged", function(e) { dex_changed(e.value); } );
+      $('#con').spinedit(spinconfig).on("valueChanged", function(e) { con_changed(e.value); } );
+      $('#int').spinedit(spinconfig).on("valueChanged", function(e) { int_changed(e.value); } );
+      $('#wis').spinedit(spinconfig).on("valueChanged", function(e) { wis_changed(e.value); } );
+      $('#cha').spinedit(spinconfig).on("valueChanged", function(e) { cha_changed(e.value); } );
+      $('#bab').spinedit(spinconfig).on("valueChanged", function(e) { bab_changed(e.value); } );
+      $('#ref').spinedit(spinconfig).on("valueChanged", function(e) { ref_changed(e.value); } );
+      $('#fort').spinedit(spinconfig).on("valueChanged", function(e) { fort_changed(e.value); } );
+      $('#will').spinedit(spinconfig).on("valueChanged", function(e) { will_changed(e.value); } );
     });
     
