@@ -2,107 +2,136 @@ extends layout
 
 block content
 
-  form.form-horizontal(id='abilities',method='post')
-    if (err)
-      div.alert.alert-error
-        =err
-  
-    div.control-group
-      if (id === '')
-        label.control-label(for='user_id') Name
-        div.controls
-          input#user_id(type='text',name='id',placeholder='Pick a unique name')
-      else
-        label.control-label(for='user_id') Name
-        div.controls
-          input#user_id(type='text',placeholder='Pick a unique name',value='#{id}')
+  div.row-fluid
+    div.span6
+      h3 Core abilities
+      form.form-horizontal(id='abilities',method='post')
+        if (err)
+          div.alert.alert-error
+            =err
+      
+        div.control-group
+          if (id === '')
+            label.control-label(for='user_id') Name
+            div.controls
+              input#user_id(type='text',name='id',placeholder='Pick a unique name')
+          else
+            label.control-label(for='user_id') Name
+            div.controls
+              input#user_id(type='text',placeholder='Pick a unique name',value='#{id}')
+    
+        div.control-group
+          label.control-label(for='alignment') Alignment
+          div.controls
+            select#alignment(name='alignment',placeholder='N')
+              each al in alignments
+                if (data.alignment === al.id)
+                  option(value='#{al.id}',selected) #{al.name}
+                else
+                  option(value='#{al.id}') #{al.name}
+    
+        div.control-group
+          label.control-label(for='str') Strength
+          div.controls
+            input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
+            span.str-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='dex') Dexterity
+          div.controls
+            input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
+            span.dex-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='con') Constitution
+          div.controls
+            input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
+            span.con-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='int') Intelligence
+          div.controls
+            input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
+            span.int-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='wis') Wisdom
+          div.controls
+            input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
+            span.wis-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='cha') Charisma
+          div.controls
+            input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
+            span.cha-mod.help-inline.badge
+    
+        div.control-group
+          label.control-label(for='bab') Base Attack Bonus
+          div.controls
+            input#bab(type='text',name='bab',placeholder='base',value='#{data.bab}')
+            span.help-inline Melee:
+              span#bab-melee.badge.badge-inverse
+            span.help-inline Ranged:
+              span#bab-ranged.badge.badge-inverse
+              
+    
+        div.control-group
+          label.control-label(for='ref') Reflex
+          div.controls
+            input#ref(type='text',name='ref',placeholder='base',value='#{data.ref}')
+            span.help-inline Dex:
+              span.dex-mod.badge
+            span.help-inline Total:
+              span#ref-total.badge.badge-inverse
+        div.control-group
+          label.control-label(for='fort') Fort
+          div.controls
+            input#fort(type='text',name='fort',placeholder='base',value='#{data.fort}')
+            span.help-inline Con:
+              span.con-mod.badge
+            span.help-inline Total:
+              span#fort-total.badge.badge-inverse
+        div.control-group
+          label.control-label(for='will') Will
+          div.controls
+            input#will(type='text',name='will',placeholder='base',value='#{data.will}')
+            span.help-inline Will:
+              span.wis-mod.badge
+            span.help-inline Total:
+              span#will-total.badge.badge-inverse
+        
+        div.control-group
+          label.control-label CMB
+          div.controls
+            span.help-inline BAB: 
+              span.bab-mod.badge
+            span.help-inline STR:
+              span.str-mod.badge
+            span.help-inline Total:
+              span#cmb-total.badge.badge-inverse
+        div.control-group
+          label.control-label CMD
+          div.controls
+            span.help-inline BAB: 
+              span.bab-mod.badge
+            span.help-inline STR:
+              span.str-mod.badge
+            span.help-inline DEX:
+              span.dex-mod.badge
+            span.help-inline Total:
+              span#cmd-total.badge.badge-inverse
 
-    div.control-group
-      label.control-label(for='alignment') Alignment
-      div.controls
-        select#alignment(name='alignment',placeholder='N')
-          each al in alignments
-            if (data.alignment === al.id)
-              option(value='#{al.id}',selected) #{al.name}
-            else
-              option(value='#{al.id}') #{al.name}
+    div.span6
+      h3 Skills
 
-    div.control-group
-      label.control-label(for='str') Strength
-      div.controls
-        input#str(type='text',name='str',placeholder='base',value='#{data.stats.str}')
-        span.str-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='dex') Dexterity
-      div.controls
-        input#dex(type='text',name='dex',placeholder='base',value='#{data.stats.dex}')
-        span.dex-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='con') Constitution
-      div.controls
-        input#con(type='text',name='con',placeholder='base',value='#{data.stats.con}')
-        span.con-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='int') Intelligence
-      div.controls
-        input#int(type='text',name='int',placeholder='base',value='#{data.stats.int}')
-        span.int-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='wis') Wisdom
-      div.controls
-        input#wis(type='text',name='wis',placeholder='base',value='#{data.stats.wis}')
-        span.wis-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='cha') Charisma
-      div.controls
-        input#cha(type='text',name='cha',placeholder='base',value='#{data.stats.cha}')
-        span.cha-mod.help-inline.badge
-
-    div.control-group
-      label.control-label(for='bab') Base Attack Bonus
-      div.controls
-        input#bab(type='text',name='bab',placeholder='base',value='#{data.bab}')
-        span.help-inline Melee:
-          span#bab-melee.badge.badge-inverse
-        span.help-inline Ranged:
-          span#bab-ranged.badge.badge-inverse
-          
-
-    div.control-group
-      label.control-label(for='ref') Reflex
-      div.controls
-        input#ref(type='text',name='ref',placeholder='base',value='#{data.ref}')
-        span.help-inline Dex:
-          span.dex-mod.badge
-        span.help-inline Total:
-          span#ref-total.badge.badge-inverse
-    div.control-group
-      label.control-label(for='fort') Fort
-      div.controls
-        input#fort(type='text',name='fort',placeholder='base',value='#{data.fort}')
-        span.help-inline Con:
-          span.con-mod.badge
-        span.help-inline Total:
-          span#fort-total.badge.badge-inverse
-    div.control-group
-      label.control-label(for='will') Will
-      div.controls
-        input#will(type='text',name='will',placeholder='base',value='#{data.will}')
-        span.help-inline Will:
-          span.wis-mod.badge
-        span.help-inline Total:
-          span#will-total.badge.badge-inverse
-
-    div.control-group
-      label.control-label
-      div.controls
-        input#save.btn-large.btn-primary(type='submit',value='Save')
-        input#cancel.btn-link(type='button',value='Cancel')
+    div.row
+      div.span6.offset6
+        div.control-group
+          label.control-label
+          div.controls
+            input#save.btn-large.btn-primary(type='submit',value='Save')
+            input#cancel.btn-link(type='button',value='Cancel')
 
 block script
   script
@@ -121,12 +150,16 @@ block script
       var modifier = modifiers(value);
       if (modifier > 0) { modifier = '+' + modifier; }
       
-      $(span_id).text(modifier)
+      badge_display(span_id, modifier);  
+    }
+    
+    var badge_display = function(span_id, value){
+      $(span_id).text(value)
         .removeClass('label-success')
         .removeClass('label-important');
     
-      if (modifier > 0) { $(span_id).addClass('label-success'); }
-      else if (modifier < 0) { $(span_id).addClass('label-important'); }    
+      if (value > 0) { $(span_id).addClass('label-success'); }
+      else if (value < 0) { $(span_id).addClass('label-important'); }  
     }
     
     var str_changed = function(value){    
@@ -155,11 +188,29 @@ block script
     var bab_changed = function(value){
       if(!value) { value = parseInt($('#bab').val()); }
     
+      badge_display('.bab-mod', value);
+    
       var str_bonus = get_stat_bonus('str');
       var dex_bonus = get_stat_bonus('dex');
     
       $('#bab-melee').text(value + str_bonus);
       $('#bab-ranged').text(value + dex_bonus);
+      
+      cmb_changed();
+      cmd_changed();
+    }
+    var cmb_changed = function(){
+      var bab = parseInt($('#bab').val());
+      var str_bonus = get_stat_bonus('str');
+      
+      $('#cmb-total').text(bab + str_bonus);
+    }
+    var cmd_changed = function(){
+      var bab = parseInt($('#bab').val());
+      var str_bonus = get_stat_bonus('str');
+      var dex_bonus = get_stat_bonus('dex');
+      
+      $('#cmd-total').text(bab + str_bonus + dex_bonus + 10);
     }
     
     var ref_changed = function(value){
