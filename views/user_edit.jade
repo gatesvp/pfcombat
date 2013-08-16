@@ -1,24 +1,18 @@
 extends layout
 
 block content
-
-  div.row-fluid
-    div.span6
-      h3 Core abilities
-      form.form-horizontal(id='abilities',method='post')
+  form.form-horizontal(id='abilities',method='post',action='/user/edit/')
+    div.row-fluid
+      div.span6
+        h3 Core abilities
         if (err)
           div.alert.alert-error
             =err
       
         div.control-group
-          if (id === '')
-            label.control-label(for='user_id') Name
-            div.controls
-              input#user_id(type='text',name='id',placeholder='Pick a unique name')
-          else
-            label.control-label(for='user_id') Name
-            div.controls
-              input#user_id(type='text',placeholder='Pick a unique name',value='#{id}')
+          label.control-label(for='user_id') Name
+          div.controls
+            input#user_id(type='text',name='id',placeholder='Pick a unique name',value='#{id}')
     
         div.control-group
           label.control-label(for='alignment') Alignment
@@ -134,7 +128,7 @@ block content
             input#cancel.btn-link(type='button',value='Cancel')
 
 block script
-  script
+  script.
     var spinconfig = {minimum:0, maximum:30, step:1, numberOfDecimals:0};
   
     var modifiers = function(score){

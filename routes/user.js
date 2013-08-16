@@ -96,7 +96,7 @@ var update_user_values = function(user, values){
 
 exports.create = function(req, res, firebase){
       var user = get_default_user();
-      res.render('user_edit', {'title': "New User", 'id': '', 'data': user});
+      render_user_screen(res, "New User", '', user, null);
 };
 
 var get_default_user = function()

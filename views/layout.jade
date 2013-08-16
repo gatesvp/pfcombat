@@ -11,6 +11,16 @@ html
     
   body
     
+    div.navbar
+      div.navbar-inner
+        a.brand(href='/') Pf Combat
+        
+        ul.nav
+          li 
+            a(href='/users') User Listing
+          li
+            a(href='/tabletop') Tabletop
+    
     block content
     
     script(src="http://code.jquery.com/jquery.js")
