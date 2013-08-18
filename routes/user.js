@@ -91,6 +91,13 @@ var update_user_values = function(user, values){
   if(values.fort) { user.fort = values.fort; }
   if(values.will) { user.will = values.will; }
   
+  if(values.skills) {
+    if (!user.skills) { user.skills = { }; }
+    for(var skill_name in values.skills){
+      user.skills[skill_name] = values.skills[skill_name];
+    }
+  }
+  
 }
 
 

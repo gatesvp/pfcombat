@@ -116,8 +116,21 @@ block content
             span.help-inline Total:
               span#cmd-total.badge.badge-inverse
 
-    div.span6
-      h3 Skills
+      div.span6
+        h3 Skills
+        
+        each skill in skills
+          if (!skill.subtypes)
+            div.control-group
+              label.control-label(for='#{skill.name}') #{skill.name}
+              div.controls
+                input(class='skill-rank',type='text',name='skills[#{skill.name}]',placeholder='0',value='#{data.skills[skill.name]}')
+                span.help-inline.badge(class='#{skill.stat}-mod')
+                
+        
+        each skill in skills
+          if (skill.subtypes)
+            div Add me dynamically (#{skill.name})
 
     div.row
       div.span6.offset6
@@ -223,6 +236,10 @@ block script
        $('#will-total').text(value+wis_bonus);
     }
 
+    var skill_changed = function(skill_name, ranks){
+    
+    }
+
     $(function() {
       // initialize the various stats
       str_changed($('#str').val());
@@ -243,5 +260,6 @@ block script
       $('#ref').spinedit(spinconfig).on("valueChanged", function(e) { ref_changed(e.value); } );
       $('#fort').spinedit(spinconfig).on("valueChanged", function(e) { fort_changed(e.value); } );
       $('#will').spinedit(spinconfig).on("valueChanged", function(e) { will_changed(e.value); } );
+      $('.skill-rank').spinedit(spinconfig).on("valueChanged", function(e) { skill_changed(this.name, e.value); } );
     });
     
