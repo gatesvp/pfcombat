@@ -122,15 +122,21 @@ block content
         each skill in skills
           if (!skill.subtypes)
             div.control-group
-              label.control-label(for='#{skill.name}') #{skill.name}
+              label.control-label(for='skills.#{skill.name}') #{skill.name}
               div.controls
-                input(class='skill-rank',type='text',name='skills[#{skill.name}]',placeholder='0',value='#{data.skills[skill.name]}')
+                input(id='skills.#{skill.name}',class='skill-rank',type='text',name='skills[#{skill.name}]',placeholder='0',value='#{data.skills[skill.name]}')
                 span.help-inline.badge(class='#{skill.stat}-mod')
                 
         
         each skill in skills
           if (skill.subtypes)
-            div Add me dynamically (#{skill.name})
+            each subtype in skill.subtypes
+              div.control-group
+                -var full_name = skill.name + '_' + subtype
+                label.control-label(for='skills.#{full_name}') #{full_name}
+                div.controls
+                  input(id='skills.#{full_name}',class='skill-rank',type='text',name='skills[#{full_name}]',placeholder='0',value='#{data.skills[full_name]}')
+                  span.help-inline.badge(class='#{skill.stat}-mod')
 
     div.row
       div.span6.offset6
