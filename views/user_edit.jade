@@ -23,7 +23,17 @@ block content
                   option(value='#{al.id}',selected) #{al.name}
                 else
                   option(value='#{al.id}') #{al.name}
-    
+  
+        div.control-group
+          label.control-label(for='race') Race
+          div.controls
+            select#race(name='race')
+              each r in races
+                if (data.race === r.id)
+                  option(value='#{r.id}',selected) #{r.name}
+                else
+                  option(value='#{r.id}') #{r.name}
+  
         div.control-group
           label.control-label(for='str') Strength
           div.controls
@@ -246,6 +256,12 @@ block script
     
     }
 
+    var race_changed = function(){
+      var race = $('#race').val();
+      
+      //alert(race);
+    }
+
     $(function() {
       // initialize the various stats
       str_changed($('#str').val());
@@ -267,5 +283,8 @@ block script
       $('#fort').spinedit(spinconfig).on("valueChanged", function(e) { fort_changed(e.value); } );
       $('#will').spinedit(spinconfig).on("valueChanged", function(e) { will_changed(e.value); } );
       $('.skill-rank').spinedit(spinconfig).on("valueChanged", function(e) { skill_changed(this.name, e.value); } );
+      
+      // listener for race
+      $('#race').on('change', function() { race_changed(); });
     });
     

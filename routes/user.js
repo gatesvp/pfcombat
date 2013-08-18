@@ -5,6 +5,7 @@
 
 var skills = require('../db/skills').skills;
 var alignments = require('../db/alignments').alignments;
+var races = require('../db/races').races;
 var ability_modifier = require('../db/stats').modifers;
 var _ = require('underscore');
 
@@ -71,6 +72,7 @@ var render_user_screen = function(res, title, id, user, err){
     'id': id, 
     'data': user, 
     'skills': skills, 
+    'races': races,
     'alignments': alignments
   }
 );
@@ -86,6 +88,7 @@ var update_user_values = function(user, values){
   if(values.cha) { user.stats.cha = values.cha; }
 
   if(values.alignment) { user.alignment = values.alignment; }
+  if(values.race) { user.race = values.race; }
   if(values.bab) { user.bab = values.bab; }
   if(values.ref) { user.ref = values.ref; }
   if(values.fort) { user.fort = values.fort; }
@@ -118,7 +121,7 @@ var get_default_user = function()
   
   return {
       stats: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 }
-    , race: 'Human'
+    , race: 'human'
     , alignment: 'N'
     , skills: starting_skills
     , feats: [ ]
