@@ -1,4 +1,5 @@
 @import url('//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic');
 div.subnav .nav>li>a,div.subnav .nav>.active>a,div.subnav .nav>.active>a:hover{color:#333}
 div.subnav-fixed{top:61px}
+label.right{text-align:right}
 .hero-unit h1,.hero-unit h2,.hero-unit h3,.hero-unit h4,.hero-unit h5,.hero-unit h6{margin:13px 0}
