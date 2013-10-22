@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , lessMiddleware = require('less-middleware')
   , user = require('./routes/user')
+  , races = require('./routes/races')
   , http = require('http')
   , path = require('path');
   
@@ -39,6 +40,9 @@ app.get('/user/create', function(req, res) { return user.create(req, res, fireba
 app.get('/user/edit/:id', function(req, res) { return user.edit(req, res, firebaseRoot); });
 //app.post('/user/create', function(req, res) { return user.save(req, res, firebaseRoot); });
 app.post('/user/edit/', function(req, res) { return user.save(req, res, firebaseRoot); });
+
+// DB lookup stuff
+app.get('/races/:id', function(req, res) { return races.get(req, res, firebaseRoot); });
 
 http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
   console.log('Express server listening on port ' + app.get('port'));

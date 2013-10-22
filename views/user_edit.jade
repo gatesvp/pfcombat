@@ -7,11 +7,17 @@ mixin ability-row(full_name, short_name)
     td
       input.input-mini(id='#{short_name}',type='text',name='#{short_name}',placeholder='base',value='#{data.stats[short_name]}')
     td
-      span(id='#{short_name}-racial') 0
+      input.input-mini(id='#{short_name}-racial',type='text',name='#{short_name}-racial',placeholder='0')
+        if data.racial_stats && data.racial_stats[short_name]
+          data.racial_stat[short_name]
+        else
+          0
     td
       span(id='#{short_name}-enhance') 0
     td
       span(id='#{short_name}-other') 0
+    td
+      span(id='#{short_name}-total',class='badge badge-inverse')
     td
       span(class='#{short_name}-mod badge')
 
@@ -53,7 +59,7 @@ block content
                   option(value='#{r.id}',selected) #{r.name}
                 else
                   option(value='#{r.id}') #{r.name}
-  
+        
         h4 Ability Scores
 
         div.row-fluid
@@ -67,6 +73,7 @@ block content
                   th Enhance
                   th Other
                   th Total
+                  th Modifier
               tbody
                 mixin ability-row('Strength', 'str')
                 mixin ability-row('Dexterity', 'dex')
@@ -89,16 +96,21 @@ block content
               tbody
                 tr
                   td
-                    label.control-label(for='bab') Base Attack Bonus
+                  td
+                  td
+                    label.right.control-label(for='bab') Base Attack Bonus
                   td
                     input#bab(type='text',name='bab',placeholder='base',value='#{data.bab}')
-                  td Melee:
+                tr
+                  td
+                  td
+                  td.right Melee:
                   td 
                     span(id='bab-melee',class='badge badge-inverse')
                 tr
                   td
                   td
-                  td Ranged:
+                  td.right Ranged:
                   td 
                     span(id='bab-ranged',class='badge badge-inverse')
                 tr
@@ -206,6 +218,17 @@ block script
       else { return Math.ceil((score-10)/2); }
     }
   
+    var get_stat_score = function(attr) {
+      return parseInt($('#'+attr).val()) + 
+            parseInt($('#'+attr+'-racial').val()) + 
+            parseInt($('#'+attr+'-enhance').text()) + 
+            parseInt($('#'+attr+'-other').text());
+    }
+    
+    var set_stat_score = function(attr, value) {
+      $('#'+attr+'-total').text(value);
+    }
+  
     var get_stat_bonus = function(attr) {
       return modifiers(parseInt($('#'+attr).val()));
     }
@@ -226,27 +249,39 @@ block script
       else if (value < 0) { $(span_id).addClass('label-important'); }  
     }
     
-    var str_changed = function(value){    
+    var str_changed = function(){
+      var value = get_stat_score('str');
+      set_stat_score('str', value);
       modifier_display('.str-mod', value);
       bab_changed();
     }
-    var dex_changed = function(value){
+    var dex_changed = function(){
+      var value = get_stat_score('dex');
+      set_stat_score('dex', value);
       modifier_display('.dex-mod', value);
       bab_changed();
       ref_changed();
     }
-    var con_changed = function(value){
+    var con_changed = function(){
+      var value = get_stat_score('con');
+      set_stat_score('con', value);
       modifier_display('.con-mod', value);
       fort_changed();
     }
-    var int_changed = function(value){
+    var int_changed = function(){
+      var value = get_stat_score('int');
+      set_stat_score('int', value);
       modifier_display('.int-mod', value);
     }
-    var wis_changed = function(value){
+    var wis_changed = function(){
+      var value = get_stat_score('wis');
+      set_stat_score('wis', value);
       modifier_display('.wis-mod', value);
       will_changed();
     }
-    var cha_changed = function(value){
+    var cha_changed = function(){
+      var value = get_stat_score('cha');
+      set_stat_score('cha', value);
       modifier_display('.cha-mod', value);
     }
     var bab_changed = function(value){
@@ -300,17 +335,43 @@ block script
     var race_changed = function(){
       var race = $('#race').val();
       
-      //alert(race);
+      var request = $.ajax({
+        url: '/races/'+race,
+        type: 'get'
+      });
+      
+      request.done(function (data, textStatus, jqXHR){
+        $('#str-racial').val(0);
+        $('#dex-racial').val(0);
+        $('#con-racial').val(0);
+        $('#int-racial').val(0);
+        $('#wis-racial').val(0);
+        $('#cha-racial').val(0);
+        
+        if (data.stats !== "pick") {
+          $('#race-mod').hide();
+          for(var stat in data.stats) {
+            $('#'+stat+'-racial').val(data.stats[stat]);
+          }
+        }
+        
+        refresh_stats();
+      });
+    }
+    
+    var refresh_stats = function() {
+      str_changed();
+      dex_changed();
+      con_changed();
+      int_changed();
+      wis_changed();
+      cha_changed();
     }
 
     $(function() {
       // initialize the various stats
-      str_changed($('#str').val());
-      dex_changed($('#dex').val());
-      con_changed($('#con').val());
-      int_changed($('#int').val());
-      wis_changed($('#wis').val());
-      cha_changed($('#cha').val());
+      race_changed();
+      refresh_stats();
 
       // initialize spinEdit
       $('#str').spinedit(spinconfig).on("valueChanged", function(e) { str_changed(e.value); } );
@@ -319,6 +380,12 @@ block script
       $('#int').spinedit(spinconfig).on("valueChanged", function(e) { int_changed(e.value); } );
       $('#wis').spinedit(spinconfig).on("valueChanged", function(e) { wis_changed(e.value); } );
       $('#cha').spinedit(spinconfig).on("valueChanged", function(e) { cha_changed(e.value); } );
+      $('#str-racial').spinedit(spinconfig).on("valueChanged", function(e) { str_changed(e.value); } );
+      $('#dex-racial').spinedit(spinconfig).on("valueChanged", function(e) { dex_changed(e.value); } );
+      $('#con-racial').spinedit(spinconfig).on("valueChanged", function(e) { con_changed(e.value); } );
+      $('#int-racial').spinedit(spinconfig).on("valueChanged", function(e) { int_changed(e.value); } );
+      $('#wis-racial').spinedit(spinconfig).on("valueChanged", function(e) { wis_changed(e.value); } );
+      $('#cha-racial').spinedit(spinconfig).on("valueChanged", function(e) { cha_changed(e.value); } );
       $('#bab').spinedit(spinconfig).on("valueChanged", function(e) { bab_changed(e.value); } );
       $('#ref').spinedit(spinconfig).on("valueChanged", function(e) { ref_changed(e.value); } );
       $('#fort').spinedit(spinconfig).on("valueChanged", function(e) { fort_changed(e.value); } );

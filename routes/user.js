@@ -86,6 +86,14 @@ var update_user_values = function(user, values){
   if(values.int) { user.stats.int = values.int; }
   if(values.wis) { user.stats.wis = values.wis; }
   if(values.cha) { user.stats.cha = values.cha; }
+  
+  user['stats-racial'] = { };
+  if(values["str-racial"]) { user['stats-racial'].str = values["str-racial"]; }
+  if(values["dex-racial"]) { user['stats-racial'].dex = values["dex-racial"]; }
+  if(values["con-racial"]) { user['stats-racial'].con = values["con-racial"]; }
+  if(values["int-racial"]) { user['stats-racial'].int = values["int-racial"]; }
+  if(values["wis-racial"]) { user['stats-racial'].wis = values["wis-racial"]; }
+  if(values["cha-racial"]) { user['stats-racial'].cha = values["cha-racial"]; }
 
   if(values.alignment) { user.alignment = values.alignment; }
   if(values.race) { user.race = values.race; }
