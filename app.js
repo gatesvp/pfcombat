@@ -8,6 +8,7 @@ var express = require('express')
   , lessMiddleware = require('less-middleware')
   , user = require('./routes/user')
   , races = require('./routes/races')
+  , alignments = require('./routes/alignments')
   , http = require('http')
   , path = require('path');
   
@@ -37,12 +38,16 @@ if ('development' == app.get('env')) {
 app.get('/', function(req, res) { return routes.index(req, res, firebaseRoot); });
 app.get('/users', function(req, res) { return user.list(req, res, firebaseRoot); });
 app.get('/user/create', function(req, res) { return user.create(req, res, firebaseRoot); });
+app.get('/user/fire/:id', function(req, res) { return user.fire(req, res, firebaseRoot); });
 app.get('/user/edit/:id', function(req, res) { return user.edit(req, res, firebaseRoot); });
 //app.post('/user/create', function(req, res) { return user.save(req, res, firebaseRoot); });
 app.post('/user/edit/', function(req, res) { return user.save(req, res, firebaseRoot); });
 
 // DB lookup stuff
 app.get('/races/:id', function(req, res) { return races.get(req, res, firebaseRoot); });
+app.get('/alignments/', function(req, res) { return alignments.list(req, res, firebaseRoot); })
+app.get('/alignments/:id', function(req, res) { return alignments.get(req, res, firebaseRoot); })
+
 
 http.createServer(app).listen(app.get('port'), app.get('ip'), function(){
   console.log('Express server listening on port ' + app.get('port'));

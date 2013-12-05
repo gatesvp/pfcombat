@@ -3,7 +3,7 @@ extends layout
 mixin ability-row(full_name, short_name)
   tr
     td.right 
-      label.right(for='#{short_name}') #{full_name}
+      label.right(for='#[short_name}') #{full_name}
     td
       input.input-mini(id='#{short_name}',type='text',name='#{short_name}',placeholder='base',value='#{data.stats[short_name]}')
     td

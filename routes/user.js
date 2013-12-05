@@ -18,6 +18,19 @@ exports.list = function(req, res, firebase){
   );
 };
 
+exports.fire = function(req, res, firebase){
+  
+  var id = req.params.id;
+  
+  res.render('user_fire', 
+  {
+    'id': id, 
+    'skills': skills, 
+    'races': races,
+    'alignments': alignments
+  });
+}
+
 exports.edit = function(req, res, firebase){
   
   var id = req.params.id;
