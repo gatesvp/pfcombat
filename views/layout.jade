@@ -6,11 +6,12 @@ html(ng-app='pfcombat')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
     link(rel='stylesheet', href='/css/bootswatch.css')
-    link(rel='stylesheet', href='/css/bootstrap-spinedit.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css')
-    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js')
-    script(src='https://cdn.firebase.com/v0/firebase.js')
-    script(src='https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js')  
+    //script(src='/js/lib/underscore/1.5.2/underscore.min.js')
+    script(src='/js/lib/angular/1.2.6/angular.min.js')
+    script(src='/js/lib/firebase/firebase.js')
+    script(src='/js/lib/firebase/angularfire.min.js')  
+    script(src='/js/lib/underscore/underscore-1.5.2.min.js')
 
   body
     
@@ -26,8 +27,7 @@ html(ng-app='pfcombat')
     
     block content
     
-    script(src="/js/jquery-2.0.3.min.js")
-    script(src="/js/bootstrap.min.js")
-    script(src="/js/bootstrap-spinedit.js")
+    script(src="/js/lib/jquery/jquery-2.0.3.min.js")
+    script(src="/js/lib/bootstrap/bootstrap.min.js")
     
     block script

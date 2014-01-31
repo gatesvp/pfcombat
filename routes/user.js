@@ -18,11 +18,11 @@ exports.list = function(req, res, firebase){
   );
 };
 
-exports.fire = function(req, res, firebase){
+exports.edit = function(req, res, firebase){
   
   var id = req.params.id;
   
-  res.render('user_fire', 
+  res.render('user_edit', 
   {
     'id': id, 
     'skills': skills, 
@@ -31,25 +31,24 @@ exports.fire = function(req, res, firebase){
   });
 }
 
-exports.edit = function(req, res, firebase){
+// exports.edit = function(req, res, firebase){
+//   var id = req.params.id;
   
-  var id = req.params.id;
-  
-  firebase.child('users').child(id).once('value', function(data){
+//   firebase.child('users').child(id).once('value', function(data){
     
-    var user = data.val();
-    var title = 'Editing ' + id;
+//     var user = data.val();
+//     var title = 'Editing ' + id;
     
-    if (!user)
-    {
-      // No user found, create some defaults
-      user = get_default_user();
-      id = '';
-    }
+//     if (!user)
+//     {
+//       // No user found, create some defaults
+//       user = get_default_user();
+//       id = '';
+//     }
     
-    render_user_screen(res, title, id, user);
-  });
-};
+//     render_user_screen(res, title, id, user);
+//   });
+// };
 
 /*
   perform actual editing based on post variables

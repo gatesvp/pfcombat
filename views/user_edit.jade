@@ -5,394 +5,194 @@ mixin ability-row(full_name, short_name)
     td.right 
       label.right(for='#{short_name}') #{full_name}
     td
-      input.input-mini(id='#{short_name}',type='text',name='#{short_name}',placeholder='base',value='#{data.stats[short_name]}')
+      input.input-mini(id='#{short_name}',class='basespinner',type='number',name='#{short_name}',placeholder='base',ng-model="user.stats.#{short_name}",ng-change="setStatTotal('#{short_name}')")
     td
-      if data["stats-racial"] && data["stats-racial"][short_name]
-        input.input-mini(id='#{short_name}-racial',type='text',name='#{short_name}-racial',placeholder='0',value='#{data["stats-racial"][short_name]}')
-      else
-        input.input-mini(id='#{short_name}-racial',type='text',name='#{short_name}-racial',placeholder='0',value='0')
+      input.input-mini(id='#{short_name}-racial',class='modspinner',type='number',name='#{short_name}-racial',placeholder=0,ng-model="user.statsRacial.#{short_name}",ng-change="setStatTotal('#{short_name}')")
     td
       span(id='#{short_name}-enhance') 0
     td
       span(id='#{short_name}-other') 0
     td
-      span(id='#{short_name}-total',class='badge badge-inverse')
+      span(id='#{short_name}-total',class='badge badge-inverse') {{user.statsTotal.#{short_name}}}
     td
-      span(class='#{short_name}-mod badge')
+      span(class='#{short_name}-mod badge') {{user.statsModifier.#{short_name}}}
 
-
-block content
-  form.form-horizontal(id='abilities',method='post',action='/user/edit/')
-    div.row-fluid
-      div.span12
-        h3 Core abilities
-        if (err)
-          div.alert.alert-error
-            =err
+mixin defense-row(full_name, short_name, stat)
+  tr
+    td.right 
+      label.right(for='#{short_name}') #{full_name}
+    td
+      input.input-mini(id='#{short_name}',class='basespinner',type='number',name='#{short_name}',placeholder='base',ng-model="user.#{short_name}")
+    td
+      span(class='badge') {{user.statsModifier.#{stat}}}
+    td
+      span(id='#{short_name}-total',class='badge badge-inverse',ng-bind="#{short_name}Total()")
       
-        
-        div.row-fluid
-          div.span2
-            label.right(for='user_id') Name
-          div.span10
-            input#user_id(type='text',name='id',placeholder='Pick a unique name',value='#{id}')
-    
-        div.row-fluid
-          div.span2
-            label.right(for='alignment') Alignment
-          div.span10
-            select#alignment(name='alignment',placeholder='N')
-              each al in alignments
-                if (data.alignment === al.id)
-                  option(value='#{al.id}',selected) #{al.name}
-                else
-                  option(value='#{al.id}') #{al.name}
+block content
+
+  div.row-fluid(ng-controller="userController", ng-init-data='{"id":"#{id}"}')
+    div.row-fluid
+      div.span6
+        h3 Core abilities
+
+    div.row-fluid
+      div.span2
+        label.right(for='user_id') Name
+      div.span10
+        input#user_id(type='text',name='id',ng-disabled="true",value='#{id}')
   
-        div.row-fluid
-          div.span2
-            label.right(for='race') Race
-          div.span10
-            select#race(name='race')
-              each r in races
-                if (data.race === r.id)
-                  option(value='#{r.id}',selected) #{r.name}
-                else
-                  option(value='#{r.id}') #{r.name}
-        
-        h4 Ability Scores
+    div.row-fluid
+      div.span2
+        label.right(for='alignments') Alignment
+      div.span10
+        select#alignments(name='alignments',ng-model='user.alignment',ng-options='alignment.id as alignment.name for alignment in alignments')
 
-        div.row-fluid
-          div.span6
-            table.table.table-condensed
-              thead
-                tr
-                  th
-                  th Base
-                  th Racial
-                  th Enhance
-                  th Other
-                  th Total
-                  th Modifier
-              tbody
-                mixin ability-row('Strength', 'str')
-                mixin ability-row('Dexterity', 'dex')
-                mixin ability-row('Constitution', 'con')
-                mixin ability-row('Intelligecne', 'int')
-                mixin ability-row('Wisdom', 'wis')
-                mixin ability-row('Charisma', 'cha')
+    div.row-fluid
+      div.span2
+        label.right(for='races') Race
+      div.span10
+        select#races(name='races',ng-model='user.race',ng-options='race.id as race.name for race in races',ng-change="setRace()")
     
-        h4 Attacks
-
-        div.row-fluid
-          div.span6
-            table.table.table-condensed
-              thead
-                tr
-                  th
-                  th 
-                  th 
-                  th Total
-              tbody
-                tr
-                  td
-                  td
-                  td
-                    label.right.control-label(for='bab') Base Attack Bonus
-                  td
-                    input#bab(type='text',name='bab',placeholder='base',value='#{data.bab}')
-                tr
-                  td
-                  td
-                  td.right Melee:
-                  td 
-                    span(id='bab-melee',class='badge badge-inverse')
-                tr
-                  td
-                  td
-                  td.right Ranged:
-                  td 
-                    span(id='bab-ranged',class='badge badge-inverse')
-                tr
-                  td
-                  td CMB
-                  td BAB:
-                    span(class='bab-mod badge')
-                    span &nbsp&nbsp;STR: 
-                    span(class='str-mod badge')
-                  td
-                    span#cmb-total.badge.badge-inverse
-                tr
-                  td
-                  td CMD
-                  td Base:
-                    span.badge 10
-                    span BAB: 
-                    span(class='bab-mod badge')
-                    span &nbsp;&nbsp;STR: 
-                    span(class='str-mod badge')
-                    span&nbsp;&nbsp;DEX:
-                    span(class='dex-mod badge');
-                  td
-                    span#cmd-total.badge.badge-inverse
-
-        h4 Defense
-        
-        div.control-group
-          label.control-label(for='ref') Reflex
-          div.controls
-            input#ref(type='text',name='ref',placeholder='base',value='#{data.ref}')
-            span.help-inline Dex:
-              span.dex-mod.badge
-            span.help-inline Total:
-              span#ref-total.badge.badge-inverse
-        div.control-group
-          label.control-label(for='fort') Fort
-          div.controls
-            input#fort(type='text',name='fort',placeholder='base',value='#{data.fort}')
-            span.help-inline Con:
-              span.con-mod.badge
-            span.help-inline Total:
-              span#fort-total.badge.badge-inverse
-        div.control-group
-          label.control-label(for='will') Will
-          div.controls
-            input#will(type='text',name='will',placeholder='base',value='#{data.will}')
-            span.help-inline Will:
-              span.wis-mod.badge
-            span.help-inline Total:
-              span#will-total.badge.badge-inverse
+    div.row-fluid
+      div.span2
+        label.right Size
+      div.span10
+        span.badge(ng-bind="user.size")
+  
+    div.row-fluid
+      div.span2
+        label.right Speed
+      div.span10
+        span.badge(ng-bind="user.speed")
         
     div.row-fluid
-      div.span12
+      div.span6
+        h3 Ability Scores
+
+    div.row-fluid
+      div.span6
+        table.table.table-condensed
+          thead
+            tr
+              th
+              th Base
+              th Racial
+              th Enhance
+              th Other
+              th Total
+              th Modifier
+          tbody
+            mixin ability-row('Strength', 'str')
+            mixin ability-row('Dexterity', 'dex')
+            mixin ability-row('Constitution', 'con')
+            mixin ability-row('Intelligence', 'int')
+            mixin ability-row('Wisdom', 'wis')
+            mixin ability-row('Charisma', 'cha')
+  
+    div.row-fluid
+      div.span6
+        h3 Attacks
+      
+    div.row-fluid
+      div.span6
+        table.table.table-condensed
+          thead
+            tr
+              th
+              th 
+              th 
+              th Total
+          tbody
+            tr
+              td
+              td
+              td
+                label.right.control-label(for='bab') Base Attack Bonus
+              td
+                input#bab.input-mini(type='number',name='bab',placeholder='base',ng-model="user.bab")
+            tr
+              td
+              td
+              td.right Melee:
+              td 
+                span(id='bab-melee',class='badge badge-inverse',ng-bind="meleeBase()")
+            tr
+              td
+              td
+              td.right Ranged:
+              td 
+                span(id='bab-ranged',class='badge badge-inverse',ng-bind="rangedBase()")
+            tr
+              td
+              td CMB
+              td BAB:
+                span(class='bab-mod badge',ng-bind="user.bab")
+                span &nbsp&nbsp;STR: 
+                span(class='str-mod badge',ng-bind="user.statsModifier.str")
+              td
+                span#cmb-total.badge.badge-inverse(ng-bind="CMB()")
+            tr
+              td
+              td CMD
+              td Base:
+                span.badge 10
+                span BAB: 
+                span(class='bab-mod badge',ng-bind="user.bab")
+                span &nbsp;&nbsp;STR: 
+                span(class='str-mod badge',ng-bind="user.statsModifier.str")
+                span&nbsp;&nbsp;DEX:
+                span(class='dex-mod badge',ng-bind="user.statsModifier.dex");
+              td
+                span#cmd-total.badge.badge-inverse(ng-bind="CMD()")
+
+    div.row-fluid
+      div.span6
+        h3 Defenses
+
+    div.row-fluid
+      div.span6
+        table.table.table-condensed
+          thead
+            th
+            th Base
+            th Ability Mod
+            th Total
+          tbody
+            mixin defense-row('Reflex', 'ref', 'dex')
+            mixin defense-row('Fortitude', 'fort', 'con')
+            mixin defense-row('Will', 'will', 'wis')
+
+    div.row-fluid
+      div.span6
         h3 Skills
-        
+    
         div.row-fluid
           div.span3
             b Name
           div.span3
             b Ranks
+            
+        div.row-fluid(ng-repeat="skill in skills | filter: { multi:false }")
+          div.span3
+            label(ng-bind="skill.name")
+          div.span3
+            input.input-mini(type='number',placeholder='0',ng-model="user.skills[skill.id]")
         
-        each skill in skills
-          if (!skill.subtypes)
-            div.row-fluid
-              div.span3
-                label(for='skills.#{skill.name}') #{skill.name}
-              div.span3
-                input(id='skills.#{skill.name}',class='skill-rank',type='text',name='skills[#{skill.name}]',placeholder='0',value='#{data.skills[skill.name]}')
-                span.help-inline.badge(class='#{skill.stat}-mod')
-                
-        
-        each skill in skills
-          if (skill.subtypes)
-            div.accordian(id='skill-#{skill.name}')
-              div.accordian-group
-                div.accordian-heading
-                  a.accordion-toggle(data-toggle="collapse",data-target="#collapse-#{skill.name}",data-parent="skill-#{skill.name}",href="#collapse-#{skill.name}")
-                    span #{skill.name}
-                div.collapse(id="collapse-#{skill.name}")
-                  div.accordian-inner
-                    each subtype in skill.subtypes
-                      div.row-fluid
-                        -var full_name = skill.name + '_' + subtype
-                        div.span3
-                          label(for='skills.#{full_name}') #{full_name}
-                        div.span3
-                          input(id='skills.#{full_name}',class='skill-rank',type='text',name='skills[#{full_name}]',placeholder='0',value='#{data.skills[full_name]}')
-                          span.help-inline.badge(class='#{skill.stat}-mod')
-
-    div.row
-      div.span6.offset6
-        div.control-group
-          label.control-label
-          div.controls
-            input#save.btn-large.btn-primary(type='submit',value='Save')
-            input#cancel.btn-link(type='button',value='Cancel')
+        // div.row-fluid(ng-repeat="skill in skills | filter: { multi:true } | subtype in skill.subtypes")
+        //   div.span3
+        //     p(ng-bind="skill.name")
+        //     p(ng-bind="subtype")
+        //   div.span3 Input here
 
 block script
+
+  script(src='/js/app.js')
+  script(src='/js/controllers.js')
+  script(src='/js/directives.js')
+
   script.
-    var spinconfig_stats = {minimum:0, maximum:30, step:1, numberOfDecimals:0};
-    var spinconfig_mods = {minimum:-10, maximum:10, step:1, numberOfDecimals:0};
-  
-    var modifiers = function(score){
-      if (score >= 10){ return Math.floor((score-10)/2); }
-      else { return Math.ceil((score-10)/2); }
-    }
-  
-    var get_stat_score = function(attr) {
-      return parseInt($('#'+attr).val()) + 
-            parseInt($('#'+attr+'-racial').val()) + 
-            parseInt($('#'+attr+'-enhance').text()) + 
-            parseInt($('#'+attr+'-other').text());
-    }
-    
-    var set_stat_score = function(attr, value) {
-      $('#'+attr+'-total').text(value);
-    }
-  
-    var get_stat_bonus = function(attr) {
-      return modifiers(parseInt($('#'+attr).val()));
-    }
-  
-    var modifier_display = function(span_id, value) {
-      var modifier = modifiers(value);
-      if (modifier > 0) { modifier = '+' + modifier; }
-      
-      badge_display(span_id, modifier);  
-    }
-    
-    var badge_display = function(span_id, value){
-      $(span_id).text(value)
-        .removeClass('label-success')
-        .removeClass('label-important');
-    
-      if (value > 0) { $(span_id).addClass('label-success'); }
-      else if (value < 0) { $(span_id).addClass('label-important'); }  
-    }
-    
-    var str_changed = function(){
-      var value = get_stat_score('str');
-      set_stat_score('str', value);
-      modifier_display('.str-mod', value);
-      bab_changed();
-    }
-    var dex_changed = function(){
-      var value = get_stat_score('dex');
-      set_stat_score('dex', value);
-      modifier_display('.dex-mod', value);
-      bab_changed();
-      ref_changed();
-    }
-    var con_changed = function(){
-      var value = get_stat_score('con');
-      set_stat_score('con', value);
-      modifier_display('.con-mod', value);
-      fort_changed();
-    }
-    var int_changed = function(){
-      var value = get_stat_score('int');
-      set_stat_score('int', value);
-      modifier_display('.int-mod', value);
-    }
-    var wis_changed = function(){
-      var value = get_stat_score('wis');
-      set_stat_score('wis', value);
-      modifier_display('.wis-mod', value);
-      will_changed();
-    }
-    var cha_changed = function(){
-      var value = get_stat_score('cha');
-      set_stat_score('cha', value);
-      modifier_display('.cha-mod', value);
-    }
-    var bab_changed = function(value){
-      if(!value) { value = parseInt($('#bab').val()); }
-    
-      badge_display('.bab-mod', value);
-    
-      var str_bonus = get_stat_bonus('str');
-      var dex_bonus = get_stat_bonus('dex');
-    
-      $('#bab-melee').text(value + str_bonus);
-      $('#bab-ranged').text(value + dex_bonus);
-      
-      cmb_changed();
-      cmd_changed();
-    }
-    var cmb_changed = function(){
-      var bab = parseInt($('#bab').val());
-      var str_bonus = get_stat_bonus('str');
-      
-      $('#cmb-total').text(bab + str_bonus);
-    }
-    var cmd_changed = function(){
-      var bab = parseInt($('#bab').val());
-      var str_bonus = get_stat_bonus('str');
-      var dex_bonus = get_stat_bonus('dex');
-      
-      $('#cmd-total').text(bab + str_bonus + dex_bonus + 10);
-    }
-    
-    var ref_changed = function(value){
-      if(!value) { value = parseInt($('#ref').val()); }
-      var dex_bonus = get_stat_bonus('dex');
-       $('#ref-total').text(value+dex_bonus);
-    }
-    var fort_changed = function(value){
-      if(!value) { value = parseInt($('#fort').val()); }
-      var con_bonus = get_stat_bonus('con');
-       $('#fort-total').text(value+con_bonus);
-    }
-    var will_changed = function(value){
-      if(!value) { value = parseInt($('#will').val()); }
-      var wis_bonus = get_stat_bonus('wis');
-       $('#will-total').text(value+wis_bonus);
-    }
-
-    var skill_changed = function(skill_name, ranks){
-    
-    }
-
-    var race_changed = function(){
-      var race = $('#race').val();
-      
-      var request = $.ajax({
-        url: '/races/'+race,
-        type: 'get'
-      });
-      
-      request.done(function (data, textStatus, jqXHR){
-        $('#str-racial').val(0);
-        $('#dex-racial').val(0);
-        $('#con-racial').val(0);
-        $('#int-racial').val(0);
-        $('#wis-racial').val(0);
-        $('#cha-racial').val(0);
-        
-        if (data.stats !== "pick") {
-          for(var stat in data.stats) {
-            $('#'+stat+'-racial').val(data.stats[stat]);
-          }
-        }
-        
-        refresh_stats();
-      });
-    }
-    
-    var refresh_stats = function() {
-      str_changed();
-      dex_changed();
-      con_changed();
-      int_changed();
-      wis_changed();
-      cha_changed();
-    }
-
     $(function() {
-      // initialize the various stats
-      //race_changed();
+      // jquery onstart code here
 
-      // initialize spinEdit
-      $('#str').spinedit(spinconfig_stats).on("valueChanged", function(e) { str_changed(e.value); } );
-      $('#dex').spinedit(spinconfig_stats).on("valueChanged", function(e) { dex_changed(e.value); } );
-      $('#con').spinedit(spinconfig_stats).on("valueChanged", function(e) { con_changed(e.value); } );
-      $('#int').spinedit(spinconfig_stats).on("valueChanged", function(e) { int_changed(e.value); } );
-      $('#wis').spinedit(spinconfig_stats).on("valueChanged", function(e) { wis_changed(e.value); } );
-      $('#cha').spinedit(spinconfig_stats).on("valueChanged", function(e) { cha_changed(e.value); } );
-      $('#str-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { str_changed(e.value); } );
-      $('#dex-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { dex_changed(e.value); } );
-      $('#con-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { con_changed(e.value); } );
-      $('#int-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { int_changed(e.value); } );
-      $('#wis-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { wis_changed(e.value); } );
-      $('#cha-racial').spinedit(spinconfig_mods).on("valueChanged", function(e) { cha_changed(e.value); } );
-      $('#bab').spinedit(spinconfig_stats).on("valueChanged", function(e) { bab_changed(e.value); } );
-      $('#ref').spinedit(spinconfig_stats).on("valueChanged", function(e) { ref_changed(e.value); } );
-      $('#fort').spinedit(spinconfig_stats).on("valueChanged", function(e) { fort_changed(e.value); } );
-      $('#will').spinedit(spinconfig_stats).on("valueChanged", function(e) { will_changed(e.value); } );
-      $('.skill-rank').spinedit(spinconfig_stats).on("valueChanged", function(e) { skill_changed(this.name, e.value); } );
-      
-      // listener for race
-      $('#race').on('change', function() { race_changed(); });
-      
-      refresh_stats();
     });
-    
+
