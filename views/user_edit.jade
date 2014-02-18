@@ -5,9 +5,9 @@ mixin ability-row(full_name, short_name)
     td.right 
       label.right(for='#{short_name}') #{full_name}
     td
-      input.input-mini(id='#{short_name}',class='basespinner',type='number',name='#{short_name}',placeholder='base',ng-model="user.stats.#{short_name}",ng-change="setStatTotal('#{short_name}')")
+      input.input-mini(id='#{short_name}',type='number',name='#{short_name}',placeholder='base',ng-model="user.stats.#{short_name}",ng-change="setStatTotal('#{short_name}')",integer,min=0,max=30)
     td
-      input.input-mini(id='#{short_name}-racial',class='modspinner',type='number',name='#{short_name}-racial',placeholder=0,ng-model="user.statsRacial.#{short_name}",ng-change="setStatTotal('#{short_name}')")
+      input.input-mini(id='#{short_name}-racial',type='number',name='#{short_name}-racial',placeholder=0,ng-model="user.statsRacial.#{short_name}",ng-change="setStatTotal('#{short_name}')",integer,min=-16,max=16)
     td
       span(id='#{short_name}-enhance') 0
     td
@@ -22,7 +22,7 @@ mixin defense-row(full_name, short_name, stat)
     td.right 
       label.right(for='#{short_name}') #{full_name}
     td
-      input.input-mini(id='#{short_name}',class='basespinner',type='number',name='#{short_name}',placeholder='base',ng-model="user.#{short_name}")
+      input.input-mini(id='#{short_name}',type='number',name='#{short_name}',placeholder='base',ng-model="user.#{short_name}",integer,min=0,max=50)
     td
       span(class='badge') {{user.statsModifier.#{stat}}}
     td
@@ -109,7 +109,7 @@ block content
               td
                 label.right.control-label(for='bab') Base Attack Bonus
               td
-                input#bab.input-mini(type='number',name='bab',placeholder='base',ng-model="user.bab")
+                input#bab.input-mini(type='number',name='bab',placeholder='base',ng-model="user.bab",integer,min=0,max=50)
             tr
               td
               td
@@ -176,7 +176,7 @@ block content
           div.span3
             label(ng-bind="skill.name")
           div.span3
-            input.input-mini(type='number',placeholder='0',ng-model="user.skills[skill.id]")
+            input.input-mini(type='number',placeholder='0',ng-model="user.skills[skill.id]",integer,min=0,max=40)
         
         // div.row-fluid(ng-repeat="skill in skills | filter: { multi:true } | subtype in skill.subtypes")
         //   div.span3
